@@ -1,8 +1,14 @@
 const express = require("express");
-const { createCommunity } = require("../controllers/userControllers");
+const { protected } = require("../middleware/authMiddleware");
+const {
+  createCommunity,
+  getCommunity,
+} = require("../controllers/communityControllers");
 
 const router = express.Router();
 
-router.post("/community", createCommunity);
+router.post("/community", protected, createCommunity);
+
+router.get("/community", protected, getCommunity);
 
 module.exports = router;

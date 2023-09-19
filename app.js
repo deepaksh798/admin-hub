@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const userRoutes = require("./routes/userRoutes");
-const communityRoutes = require("./routes/communityRoutes.js");
+const communityRoutes = require("./routes/communityRoutes");
 
 dotenv.config();
 connectDB();

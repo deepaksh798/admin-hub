@@ -24,13 +24,13 @@ const signup = async (req, res) => {
     }
 
     const data = {
-      _id: Snowflake.generate(),
+      id: Snowflake.generate(),
       name, //name:name
       email,
       password,
     };
 
-    const token = await generateToken(data._id);
+    const token = await generateToken(data.id);
     console.log("token--->", token);
 
     const user = await User.create(data);
@@ -61,7 +61,7 @@ const signin = async (req, res) => {
 
     const passValid = await bcrypt.compare(password, user.password);
 
-    console.log("userId-->", user._id);
+    console.log("userId-->", user.id);
 
     if (!passValid) {
       console.log("");
@@ -69,7 +69,7 @@ const signin = async (req, res) => {
       throw new Error("INVALID DETAILS");
     }
 
-    const token = await generateToken(user._id);
+    const token = await generateToken(user.id);
     console.log("token-->", token);
 
     if (user) {
@@ -86,7 +86,7 @@ const signin = async (req, res) => {
 
 const getUserDetails = async (req, res) => {
   try {
-    console.log("Indie the get me function");
+    console.log("WE ARE IN GetUserDetails");
     let token;
 
     if (
@@ -95,10 +95,10 @@ const getUserDetails = async (req, res) => {
     ) {
       token = req.headers.authorization.split(" ")[1];
 
-      const { _id } = jwt.verify(token, process.env.TOKEN_KEY);
-      console.log("Decrypt Token-->", _id);
+      const { id } = jwt.verify(token, process.env.TOKEN_KEY);
+      console.log("Decrypt Token-->", id);
 
-      const user = await User.findOne({ _id }, "-password");
+      const user = await User.findOne({ id }, "-password");
       console.log("user", user);
 
       if (!user) {
