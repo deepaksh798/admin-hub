@@ -33,7 +33,7 @@ const createCommunity = async (req, res) => {
   }
 };
 
-const getCommunity = async (req, res) => {
+const getAllCommunity = async (req, res) => {
   try {
     console.log("we are in GetCommunity");
     data = await Community.find();
@@ -46,12 +46,15 @@ const getCommunity = async (req, res) => {
     }
     if (data.length === 0) {
       res.status(400);
-      throw new Error("no communies are there");
+      throw new Error("no communities are there!");
     }
+
+    const length = Math.floor(data.length / 5);
+
     res.status(200).json({
       status: true,
       content: {
-        meta: { total: data.length, pages: data.length / 5 },
+        meta: { total: data.length, pages: length },
         data: data,
       },
     });
@@ -60,4 +63,75 @@ const getCommunity = async (req, res) => {
   }
 };
 
-module.exports = { createCommunity, getCommunity };
+const getAllMembers = async (req, res) => {
+  try {
+    const slug = req.params.id;
+
+    const community = await Community.find({ slug: slug });
+
+    if (!community) {
+      console.log("community not found");
+      res.status(200);
+      throw new Error("community not found");
+    }
+
+    console.log("community-->", community);
+    const members = await Members.find({ community: community[0]._id })
+      .populate("user", "name")
+      .populate("role", "name");
+    console.log("members", members);
+
+    if (!members) {
+      console.log("Community not found");
+      res.statue(404);
+      throw new Error("Members not found");
+    }
+
+    res.status(200).json({ statue: true, content: { data: members } });
+  } catch (error) {
+    console.log(error);
+    res.status(400);
+  }
+};
+
+const getMyOwnedCommunity = async (req, res) => {
+  try {
+    const communities = await Community.find({ owner: req.user._id });
+
+    if (!communities) {
+      console.log("Community not found");
+      res.status(404);
+      throw new Error("Community not found");
+    }
+
+    res.status(200).json({
+      status: true,
+      content: {
+        meta: { total: communities.length, pages: 1, page: 1 },
+        data: communities,
+      },
+    });
+  } catch (error) {
+    console.log("error", error);
+    res.status(400);
+    throw new Error(`Error in create communtity api`);
+  }
+};
+
+const getMyJoinedCommunity = async (req, res) => {
+  try {
+    const data = await Member.find({ user: req.user._id }).populate(
+      "community"
+    );
+    // console.log("data", data);
+    res.status(200).json({ statue: true, content: { data: data } });
+  } catch (error) {}
+};
+
+module.exports = {
+  createCommunity,
+  getAllCommunity,
+  getAllMembers,
+  getMyOwnedCommunity,
+  getMyJoinedCommunity,
+};

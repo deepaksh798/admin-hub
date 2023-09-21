@@ -7,6 +7,8 @@ const jwt = require("jsonwebtoken");
 
 const userRoutes = require("./routes/userRoutes");
 const communityRoutes = require("./routes/communityRoutes");
+const roleRoutes = require("./routes/roleRoutes");
+const memberRoutes = require("./routes/memberRoutes");
 
 dotenv.config();
 connectDB();
@@ -21,7 +23,11 @@ app.get("/", (req, res) => {
 
 app.use("/v1/auth", userRoutes);
 
-app.use("/v1", communityRoutes);
+app.use("/v1/community", communityRoutes);
+
+app.use("/v1/role", roleRoutes);
+
+app.use("/v1/member", memberRoutes);
 
 app.listen(port, () => {
   console.log("Server started on port 5000");

@@ -1,5 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const slug = require("mongoose-slug-generator");
+
+mongoose.plugin(slug);
 
 const communitySchema = mongoose.Schema(
   {
@@ -14,6 +17,11 @@ const communitySchema = mongoose.Schema(
     },
     owner: {
       type: String,
+      required: true,
+    },
+    slug: {
+      type: mongoose.Schema.Types.String,
+      slug: "name",
       required: true,
     },
   },

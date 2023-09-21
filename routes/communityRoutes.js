@@ -1,14 +1,23 @@
 const express = require("express");
-const { protected } = require("../middleware/authMiddleware");
+const { protect } = require("../middleware/authMiddleware");
 const {
   createCommunity,
-  getCommunity,
+  getAllCommunity,
+  getAllMembers,
+  getMyOwnedCommunity,
+  getMyJoinedCommunity,
 } = require("../controllers/communityControllers");
 
 const router = express.Router();
 
-router.post("/community", protected, createCommunity);
+router.post("/", protect, createCommunity);
 
-router.get("/community", protected, getCommunity);
+router.get("/", protect, getAllCommunity);
+
+router.get("/:id", getAllMembers);
+
+router.get("/me/owner", protect, getMyOwnedCommunity);
+
+router.get("/me/member", protect, getMyJoinedCommunity);
 
 module.exports = router;

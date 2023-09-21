@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 
-const protected = async (req, res, next) => {
+const protect = async (req, res, next) => {
   console.log("we are in AUTH MIDDLEWARE");
 
   let token;
@@ -31,4 +31,4 @@ const protected = async (req, res, next) => {
   }
 };
 
-module.exports = { protected };
+module.exports = { protect };
