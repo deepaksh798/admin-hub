@@ -1,6 +1,7 @@
 const express = require("express");
 const { Snowflake } = require("@theinternetfolks/snowflake");
 const Community = require("../models/communityModel");
+const Members = require("../models/memberModel");
 
 // Create Community
 
@@ -17,6 +18,7 @@ const createCommunity = async (req, res) => {
       id: Snowflake.generate(),
       name: name,
       owner: req.user.id,
+      slug: name,
     };
 
     console.log("data-->", data);
@@ -120,12 +122,15 @@ const getMyOwnedCommunity = async (req, res) => {
 
 const getMyJoinedCommunity = async (req, res) => {
   try {
-    const data = await Member.find({ user: req.user._id }).populate(
+    console.log("req.user==>", req.user.id);
+    const data = await Members.find({ user: req.user._id }).populate(
       "community"
     );
-    // console.log("data", data);
+    console.log("data", data);
     res.status(200).json({ statue: true, content: { data: data } });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = {

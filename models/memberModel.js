@@ -11,7 +11,7 @@ const memberSchema = mongoose.Schema(
       required: true,
     },
     community: {
-      type: mongoose.Schema.Types.String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Community",
       required: true,
     },

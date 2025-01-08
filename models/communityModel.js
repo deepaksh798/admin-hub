@@ -21,7 +21,7 @@ const communitySchema = mongoose.Schema(
     },
     slug: {
       type: mongoose.Schema.Types.String,
-      slug: "name",
+      // slug: "name",
       required: true,
     },
   },
