@@ -49,38 +49,32 @@ const signup = async (req, res) => {
 
 const signin = async (req, res) => {
   try {
-    const email = req.body.email;
-    const password = req.body.password;
+    const { email, password } = req.body;
 
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email });
 
     if (!user) {
       console.log("Invalid email");
-      res.status(400);
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
     const passValid = await bcrypt.compare(password, user.password);
 
-    console.log("userId-->", user.id);
-
     if (!passValid) {
-      console.log("");
-      res.status(400);
-      throw new Error("INVALID DETAILS");
+      console.log("Invalid password");
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
     const token = await generateToken(user.id);
     console.log("token-->", token);
 
-    if (user) {
-      console.log("user--->", user);
-      res.status(200).json({
-        status: true,
-        content: { data: user, meta: { access_token: token } },
-      });
-    }
+    return res.status(200).json({
+      status: true,
+      content: { data: user, meta: { access_token: token } },
+    });
   } catch (error) {
-    console.log("error--->", error);
+    console.error("error--->", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

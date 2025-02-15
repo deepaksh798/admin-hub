@@ -4,6 +4,7 @@ const { Snowflake } = require("@theinternetfolks/snowflake");
 const connectDB = require("./config/db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 
 const userRoutes = require("./routes/userRoutes");
 const communityRoutes = require("./routes/communityRoutes");
@@ -15,6 +16,7 @@ connectDB();
 const app = express();
 const port = process.env.PORT;
 
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
