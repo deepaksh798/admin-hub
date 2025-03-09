@@ -15,6 +15,7 @@ const createRole = async (req, res) => {
     const data = {
       id: Snowflake.generate(),
       name: name,
+      owner: req.user.id,
     };
 
     console.log("data-->", data);
@@ -41,7 +42,8 @@ const getAllRole = async (req, res) => {
   try {
     console.log("We are in getAllRole");
 
-    const data = await Role.find();
+    const data = await Role.find({ owner: req.user.id });
+    console.log("-------we are here----------");
 
     if (!data) {
       res.status(400);

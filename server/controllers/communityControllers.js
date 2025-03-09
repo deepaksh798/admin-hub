@@ -22,6 +22,7 @@ const createCommunity = async (req, res) => {
     };
 
     console.log("data-->", data);
+    // console.log("req.user.id --->", req.user.id);
 
     const community = await Community.create(data);
     if (community) {
