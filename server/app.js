@@ -17,14 +17,12 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(
-  cors(
-    cors({
-      origin: ["http://localhost:3000", "https://your-frontend-domain.com"], // Allow frontend origins
-      methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
-      allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-      credentials: true, // Allow cookies if needed
-    })
-  )
+  cors({
+    origin: ["http://localhost:3000", "https://your-frontend-domain.com"], // Allow frontend origins
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+    credentials: true, // Allow cookies if needed
+  })
 );
 app.use(express.json());
 
