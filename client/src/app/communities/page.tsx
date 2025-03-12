@@ -1,5 +1,4 @@
 "use client";
-
 import { getToken } from "@/_utils/cookies";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +14,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+const Communities = () => {
   const [communities, setCommunities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,7 +22,7 @@ const page = () => {
 
   // Open create-new-community
   const handleCreateNew = () => {
-    router.push("/community/create-new-community");
+    router.push("/communities/create-new-community");
   };
 
   // Fetch Table Data
@@ -62,12 +61,11 @@ const page = () => {
   }, []);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-
+  // if (error) return <p>Error: {error}</p>;
   return (
     <div className="pt-8 px-4">
       <div className="flex justify-end">
-        <Button onClick={() => handleCreateNew()}>Create New Community</Button>
+        <Button onClick={() => handleCreateNew()}>Create Community</Button>
       </div>
       <div className="mt-5">
         <Table>
@@ -108,4 +106,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Communities;

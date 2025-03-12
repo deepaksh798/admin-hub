@@ -52,7 +52,7 @@ const Page = () => {
   };
 
   const handleBack = () => {
-    router.push("/community");
+    router.push("/communities");
   };
 
   return (

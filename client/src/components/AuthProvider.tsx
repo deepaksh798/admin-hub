@@ -23,7 +23,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
     if (token) {
       setIsAuthenticated(true);
       if (pathname?.includes("/login") || pathname === "/") {
-        router.push("/community");
+        router.push("/dashboard");
       }
     } else {
       setIsAuthenticated(false);
