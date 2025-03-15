@@ -112,21 +112,23 @@ const getUserDetails = async (req, res) => {
   }
 };
 
-// const getAllUsers = async (req, res) => {
-//   try {
-//     // Fetch all users except the password field
-//     const users = await User.find({}, "-password");
+const getAllUsers = async (req, res) => {
+  try {
+    console.log("GetAllUsers api running");
 
-//     res.status(200).json({
-//       status: true,
-//       content: {
-//         data: users,
-//       },
-//     });
-//   } catch (error) {
-//     console.error("Error fetching users:", error);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };
+    // Fetch all users except the password field
+    const users = await User.find({}, "-password");
 
-module.exports = { signup, signin, getUserDetails };
+    res.status(200).json({
+      status: true,
+      content: {
+        data: users,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+module.exports = { signup, signin, getUserDetails, getAllUsers };
