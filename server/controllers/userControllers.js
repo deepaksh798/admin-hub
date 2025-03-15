@@ -129,4 +129,4 @@ const getUserDetails = async (req, res) => {
 //   }
 // };
 
-// module.exports = { signup, signin, getUserDetails, getAllUsers };
+module.exports = { signup, signin, getUserDetails, getAllUsers };
