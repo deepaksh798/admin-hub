@@ -1,108 +1,61 @@
 "use client";
 
-import { getToken } from "@/_utils/cookies";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import axios from "axios";
+import WelcomeSection from "@/components/WelcomeSection";
+import { useAppDispatch, useAppSelector } from "@/lib/Redux/Hook/hook";
+import { fetchCommunities } from "@/lib/Redux/Slice/communitiesSlice";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { MdOutlineTaskAlt } from "react-icons/md";
+import { LuUsers } from "react-icons/lu";
+import { RiBuilding2Line } from "react-icons/ri";
 
 const Dashboard = () => {
-  const [communities, setCommunities] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const communities = useAppSelector((state: any) => state.communities);
+
+  useEffect(() => {
+    dispatch(fetchCommunities());
+  }, []);
 
   // Open create-new-community
   const handleCreateNew = () => {
     router.push("/community/create-new-community");
   };
 
-  // Fetch Table Data
-  useEffect(() => {
-    const fetchCommunities = async () => {
-      try {
-        const access_token = getToken();
-        const config = {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${access_token}`,
-          },
-        };
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/community`,
-          config
-        );
-
-        console.log("we are here", data);
-
-        if (data.status) {
-          console.log(data);
-
-          setCommunities(data.content.data); // Store the fetched community data
-        } else {
-          throw new Error("Failed to fetch communities");
-        }
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCommunities();
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-
   return (
-    <div className="pt-8 px-4">
-      <div className="flex justify-end">
-        <Button onClick={() => handleCreateNew()}>Create New Community</Button>
-      </div>
-      <div className="mt-5">
-        <Table>
-          <TableCaption>List of all community</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>No.</TableHead>
-              <TableHead>Id</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Owner_Id</TableHead>
-              <TableHead>UpdatedAt</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {communities.map((data: any, index) => (
-              <TableRow key={index}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{data.id}</TableCell>
-                <TableCell>{data.name}</TableCell>
-                <TableCell>{data.owner}</TableCell>
-                <TableCell>
-                  {new Date(data.updatedAt).toLocaleString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                    hour12: true,
-                  })}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+    <div>
+      <WelcomeSection />
+      <div className="flex gap-6 mt-8">
+        <div className="w-full flex justify-between p-6 border rounded-lg">
+          <div>
+            <span className="text-base text-[#6B7280]">Total Users</span>
+            <div className="text-3xl font-bold mt-3">2543</div>
+          </div>
+          <div className="h-fit p-3 bg-[#EFF6FF] text-[#2563EB] rounded-lg">
+            <LuUsers className="h-6 w-6" />
+          </div>
+        </div>
+        <div className="w-full flex justify-between p-6 border rounded-lg">
+          <div>
+            <span className="text-base text-[#6B7280]">Total Communities</span>
+            <div className="text-3xl font-bold mt-3">
+              {communities.communities.meta.total}
+            </div>
+          </div>
+          <div className="h-fit p-3 bg-[#FAF5FF] text-[#9333EA] rounded-lg">
+            <RiBuilding2Line className="h-6 w-6" />
+          </div>
+        </div>
+        <div className="w-full flex justify-between p-6 border rounded-lg">
+          <div>
+            <span className="text-base text-[#6B7280]">Active Roles</span>
+            <div className="text-3xl font-bold mt-3">85</div>
+          </div>
+          <div className="h-fit p-3 bg-[#F0FDF4] text-[#16A34A] rounded-lg">
+            <MdOutlineTaskAlt className="h-6 w-6" />
+          </div>
+        </div>
       </div>
     </div>
   );

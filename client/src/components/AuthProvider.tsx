@@ -42,7 +42,7 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
           <SideNavbar />
           <div className="flex-1 flex flex-col">
             <Navbar />
-            <div className="">{children}</div>
+            <div className="pt-8 px-8">{children}</div>
           </div>
         </>
       ) : (

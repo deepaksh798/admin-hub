@@ -1,9 +1,9 @@
 import React from "react";
 import { HiOutlineShieldCheck } from "react-icons/hi";
-import { FaHome } from "react-icons/fa";
-import { RiUserCommunityFill } from "react-icons/ri";
-import { MdWork } from "react-icons/md";
-import { HiUsers } from "react-icons/hi2";
+import { GoHome } from "react-icons/go";
+import { MdOutlineTaskAlt } from "react-icons/md";
+import { LuUsers } from "react-icons/lu";
+import { RiBuilding2Line } from "react-icons/ri";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,22 +14,22 @@ const SideNavbar = () => {
   const navItems = [
     {
       name: "Dashboard",
-      icon: <FaHome className="h-5 w-5" />,
+      icon: <GoHome className="h-5 w-5" />,
       path: "/dashboard",
     },
     {
       name: "Communities",
-      icon: <RiUserCommunityFill className="h-5 w-5" />,
+      icon: <RiBuilding2Line className="h-5 w-5" />,
       path: "/communities",
     },
     {
       name: "Roles",
-      icon: <MdWork className="h-5 w-5" />,
+      icon: <MdOutlineTaskAlt className="h-5 w-5" />,
       path: "/roles",
     },
     {
       name: "Users",
-      icon: <HiUsers className="h-5 w-5" />,
+      icon: <LuUsers className="h-5 w-5" />,
       path: "/users",
     },
   ];

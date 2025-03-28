@@ -56,7 +56,7 @@ const Page = () => {
   };
 
   return (
-    <div className="pt-8 px-4">
+    <div>
       <div className="flex items-center gap-1 text-2xl font-bold">
         <MdKeyboardArrowLeft
           className="h-9 w-9 cursor-pointer"

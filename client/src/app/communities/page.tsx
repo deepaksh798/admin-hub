@@ -1,5 +1,4 @@
 "use client";
-import { getToken } from "@/_utils/cookies";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -10,60 +9,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import axios from "axios";
+import { useAppDispatch, useAppSelector } from "@/lib/Redux/Hook/hook";
+import { fetchCommunities } from "@/lib/Redux/Slice/communitiesSlice";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 const Communities = () => {
-  const [communities, setCommunities] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const communities = useAppSelector((state: any) => state.communities);
+  console.log("in comm before--->", communities);
+
+  useEffect(() => {
+    dispatch(fetchCommunities());
+  }, []);
 
   // Open create-new-community
   const handleCreateNew = () => {
     router.push("/communities/create-new-community");
   };
 
-  // Fetch Table Data
-  useEffect(() => {
-    const fetchCommunities = async () => {
-      try {
-        const access_token = getToken();
-        const config = {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${access_token}`,
-          },
-        };
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/community`,
-          config
-        );
-
-        console.log("we are here", data);
-
-        if (data.status) {
-          console.log(data);
-
-          setCommunities(data.content.data); // Store the fetched community data
-        } else {
-          throw new Error("Failed to fetch communities");
-        }
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCommunities();
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error}</p>;
   return (
-    <div className="pt-8 px-4">
+    <div>
       <div className="flex justify-end">
         <Button onClick={() => handleCreateNew()}>Create Community</Button>
       </div>
@@ -80,7 +47,7 @@ const Communities = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {communities.map((data: any, index) => (
+            {communities?.communities?.data?.map((data: any, index: any) => (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{data.id}</TableCell>
