@@ -119,9 +119,12 @@ const getAllUsers = async (req, res) => {
     // Fetch all users except the password field
     const users = await User.find({}, "-password");
 
+    const length = Math.floor(data.length / 5);
+
     res.status(200).json({
       status: true,
       content: {
+        meta: {total: data.length, pages: length},
         data: users,
       },
     });
