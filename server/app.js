@@ -18,7 +18,7 @@ const port = process.env.PORT;
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://your-frontend-domain.com"], // Allow frontend origins
+    origin: ["http://localhost:3000", "https://admin-hub-3e9.pages.dev"], // Allow frontend origins
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
     credentials: true, // Allow cookies if needed
