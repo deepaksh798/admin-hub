@@ -12,7 +12,7 @@ import { RiBuilding2Line } from "react-icons/ri";
 const Dashboard = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const communities = useAppSelector((state: any) => state.communities);
+  const communities = useAppSelector((state: any) => state?.communities);
 
   useEffect(() => {
     dispatch(fetchCommunities());
@@ -40,7 +40,7 @@ const Dashboard = () => {
           <div>
             <span className="text-base text-[#6B7280]">Total Communities</span>
             <div className="text-3xl font-bold mt-3">
-              {communities.communities.meta.total}
+              {communities?.communities?.meta?.total}
             </div>
           </div>
           <div className="h-fit p-3 bg-[#FAF5FF] text-[#9333EA] rounded-lg">
