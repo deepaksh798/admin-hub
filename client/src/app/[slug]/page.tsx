@@ -1,5 +1,7 @@
 import React from "react";
 
+export const runtime = "edge";
+
 type Props = {};
 
 const WrongPath = (props: Props) => {
