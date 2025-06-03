@@ -16,14 +16,7 @@ connectDB();
 const app = express();
 const port = process.env.PORT;
 
-app.use(
-  cors({
-    origin: ["http://localhost:3000", "https://admin-hub-3e9.pages.dev"], // Allow frontend origins
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-    credentials: true, // Allow cookies if needed
-  })
-);
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
