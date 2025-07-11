@@ -16,7 +16,12 @@ connectDB();
 const app = express();
 const port = process.env.PORT;
 
-app.use(cors());
+const corsOptions = {
+  origin: "*", // or specify your frontend URL instead of "*"
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/", (req, res) => {
