@@ -2,32 +2,31 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 
 const protect = async (req, res, next) => {
-  console.log("we are in AUTH MIDDLEWARE");
-
   let token;
 
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    req.headers.authorization.startsWith("Bearer ")
   ) {
-    try {
-      token = req.headers.authorization.split(" ")[1];
+    token = req.headers.authorization.split(" ")[1];
+  }
 
-      const decodeToken = jwt.verify(token, process.env.TOKEN_KEY);
-      console.log("Decrypt Token-->", decodeToken);
+  if (!token) {
+    return res.status(401).json({ message: "Not authorized, no token" });
+  }
 
-      req.user = await User.findOne({ id: decodeToken.id }).select("-password");
-      console.log("req.user===>", req.user);
-      next();
-    } catch (error) {
-      console.log(error);
-      res.status(400);
-      throw new Error("error appear in authMiddleware");
+  try {
+    const decodeToken = jwt.verify(token, process.env.TOKEN_KEY);
+    req.user = await User.findOne({ id: decodeToken.id }).select("-password");
+    if (!req.user) {
+      return res
+        .status(401)
+        .json({ message: "Not authorized, user not found" });
     }
-    if (!token) {
-      console.log("invalid token");
-      res.status(400);
-    }
+    next();
+  } catch (error) {
+    console.error("Auth error:", error);
+    return res.status(401).json({ message: "Not authorized, token failed" });
   }
 };
 
