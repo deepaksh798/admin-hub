@@ -6,7 +6,7 @@ const Role = require("../models/roleModel");
 
 const memberSchema = mongoose.Schema(
   {
-    _id: {
+    id: {
       type: String,
       required: true,
     },

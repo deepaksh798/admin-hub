@@ -48,8 +48,9 @@ const getAllCommunity = async (req, res) => {
       throw new Error("not found");
     }
     if (data.length === 0) {
-      res.status(400);
-      throw new Error("no communities are there!");
+      res.status(200).json({ status: 400, message: "No communities found" });
+      console.log("No communities found");
+      return;
     }
 
     const length = Math.floor(data.length / 5);
@@ -79,7 +80,7 @@ const getAllMembers = async (req, res) => {
     }
 
     console.log("community-->", community);
-    const members = await Members.find({ community: community[0]._id })
+    const members = await Members.find({ community: community[0].id })
       .populate("user", "name")
       .populate("role", "name");
     console.log("members", members);
@@ -99,7 +100,7 @@ const getAllMembers = async (req, res) => {
 
 const getMyOwnedCommunity = async (req, res) => {
   try {
-    const communities = await Community.find({ owner: req.user._id });
+    const communities = await Community.find({ owner: req.user.id });
 
     if (!communities) {
       console.log("Community not found");
@@ -124,7 +125,7 @@ const getMyOwnedCommunity = async (req, res) => {
 const getMyJoinedCommunity = async (req, res) => {
   try {
     console.log("req.user==>", req.user.id);
-    const data = await Members.find({ user: req.user._id }).populate(
+    const data = await Members.find({ user: req.user.id }).populate(
       "community"
     );
     console.log("data", data);

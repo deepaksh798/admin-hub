@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const slug = require("mongoose-slug-generator");
+const { required } = require("nodemon/lib/config");
 
 mongoose.plugin(slug);
 
@@ -18,6 +19,10 @@ const communitySchema = mongoose.Schema(
     owner: {
       type: String,
       required: true,
+    },
+    members: {
+      type: Array,
+      required: false,
     },
     slug: {
       type: mongoose.Schema.Types.String,
