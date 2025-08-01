@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { loginApi } from "@/network/Api";
+import { LuUserRound } from "react-icons/lu";
 
 const Login = () => {
   const [error, setError] = useState("");
@@ -47,14 +48,8 @@ const Login = () => {
     <div className="h-screen w-full flex flex-col justify-center items-center bg-gray-50">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-xl shadow-lg">
         <div className="flex flex-col items-center justify-center space-y-2">
-          <div className="relative w-16 h-16 overflow-hidden">
-            <Image
-              src="/profile.png"
-              alt="Logo"
-              width={64}
-              height={64}
-              className="rounded-full border-4 border-gray-100"
-            />
+          <div className="relative w-16 h-16 overflow-hidden border border-gray-300 rounded-full bg-gray-100">
+            <LuUserRound className="h-full w-full text-[#6B7280] p-1" />
           </div>
           <h1 className="text-3xl font-bold text-gray-800">Welcome Back</h1>
           <p className="text-gray-500 text-center">

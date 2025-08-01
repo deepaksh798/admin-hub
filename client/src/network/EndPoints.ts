@@ -2,6 +2,9 @@ export const ENDPOINTS = {
   // Authentication Endpoints
   LOGIN: "v1/auth/signin",
   SIGNUP: "v1/auth/signup",
+  // Dashboard Endpoints
+  GET_DASHBOARD_DATA: "v1/dashboard",
+  // User Endpoints
   ME: "v1/auth/me",
   // community Endpoints
   GET_ALL_COMMUNITIES: "v1/community",

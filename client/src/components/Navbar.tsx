@@ -50,7 +50,7 @@ const Navbar = () => {
           <DropdownMenuTrigger asChild>
             <div className="flex gap-3 items-center cursor-pointer">
               <div className="w-10 h-10 rounded-full overflow-hidden border border-[#E5E7EB] bg-[#ecedee] flex items-center justify-center">
-                <LuUserRound className="h-full w-full text-[#6B7280]" />
+                <LuUserRound className="h-full w-full text-[#6B7280] p-1" />
               </div>
               <div className="leading-3">
                 <div className="font-medium text-base">

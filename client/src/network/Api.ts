@@ -41,3 +41,8 @@ export const createRole = (payload: any) => {
 export const createCommunityMembers = (payload: any) => {
   return postRequest(ENDPOINTS.CREATE_COMMUNITY_MEMBERS, payload);
 };
+
+// Dashboard API's
+export const getDashboardData = () => {
+  return getRequest(ENDPOINTS.GET_DASHBOARD_DATA);
+};

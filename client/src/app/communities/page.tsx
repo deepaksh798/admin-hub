@@ -56,7 +56,8 @@ const Communities = () => {
 
   return (
     <div>
-      <div className="flex justify-end">
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-medium">Communities</h1>
         <Button onClick={() => handleCreateNew()}>Create Community</Button>
       </div>
       <div className="mt-5">
