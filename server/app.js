@@ -10,6 +10,7 @@ const userRoutes = require("./routes/userRoutes");
 const communityRoutes = require("./routes/communityRoutes");
 const roleRoutes = require("./routes/roleRoutes");
 const memberRoutes = require("./routes/memberRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 dotenv.config();
 connectDB();
@@ -29,6 +30,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/v1/auth", userRoutes);
+
+app.use("/v1/dashboard", dashboardRoutes);
 
 app.use("/v1/community", communityRoutes);
 
