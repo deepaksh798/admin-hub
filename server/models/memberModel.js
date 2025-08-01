@@ -11,18 +11,19 @@ const memberSchema = mongoose.Schema(
       required: true,
     },
     community: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Community",
+      type: String,
       required: true,
     },
     user: {
-      type: mongoose.Schema.Types.String,
-      ref: "User",
+      type: String,
+      required: true,
+    },
+    userEmail: {
+      type: String,
       required: true,
     },
     role: {
-      type: mongoose.Schema.Types.String,
-      ref: "Role",
+      type: String,
       required: true,
     },
   },

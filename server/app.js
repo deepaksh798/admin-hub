@@ -25,7 +25,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  console.log("api is running");
+  res.send("API is running...");
 });
 
 app.use("/v1/auth", userRoutes);

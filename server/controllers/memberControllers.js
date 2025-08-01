@@ -10,56 +10,67 @@ const createMember = async (req, res) => {
     const { community, user, role } = req.body;
 
     if (!community || !user || !role) {
-      res.status({
-        status: 400,
+      res.status(400).json({
+        status: false,
         message: "Community, user and role are required",
       });
       console.log("community, user and role required");
       return;
     }
 
-    const communityId = await Community.findOne({ id: community });
-    console.log("communityId--->", communityId);
-
-    if (!communityId) {
+    const communityDoc = await Community.findOne({ id: community });
+    if (!communityDoc) {
       console.log("community not found");
-      res.status(200);
-    }
-    const roleData = await Role.findOne({ id: role });
-    if (!roleData) {
-      console.log("role not found");
-      res.status(200);
-    }
-    const userId = await User.findOne({ id: user });
-    if (!userId) {
-      console.log("user not found");
-      res.status(200);
+      return res
+        .status(404)
+        .json({ status: false, message: "Community not found" });
     }
 
-    const data = {
+    const roleDoc = await Role.findOne({ id: role });
+    if (!roleDoc) {
+      console.log("role not found");
+      return res.status(404).json({ status: false, message: "Role not found" });
+    }
+
+    const userDoc = await User.findOne({ id: user });
+    if (!userDoc) {
+      console.log("user not found");
+      return res.status(404).json({ status: false, message: "User not found" });
+    }
+
+    console.log("Creating member for community:", communityDoc);
+    console.log("User:", userDoc, "Role:", roleDoc);
+
+    // Create member object
+    const memberData = {
       id: Snowflake.generate(),
-      community,
-      user,
-      role,
+      community: communityDoc.name,
+      user: userDoc.name,
+      userEmail: userDoc.email,
+      role: roleDoc.name,
     };
 
-    const member = await Member.create(data);
+    const member = await Member.create(memberData);
     if (!member) {
-      res.status(400);
-      throw new Error("error in creating member");
+      return res
+        .status(400)
+        .json({ status: false, message: "Error in creating member" });
     }
 
-    // Add member to community's members array with id and name
-    await Community.findOneAndUpdate(
-      { id: community },
-      { $push: { members: { id: member.id, name: userId.name } } }
-    );
+    // Prepare user and role info for community members array
+    const memberInfo = {
+      user: { id: userDoc.id, name: userDoc.name },
+      role: { id: roleDoc.id, name: roleDoc.name },
+    };
 
-    console.log("data", data);
+    // Push member info to community's members array
+    communityDoc.members.push(memberInfo);
+    await communityDoc.save();
+
     res.status(200).json({ status: true, content: { data: { member } } });
   } catch (error) {
     console.log("error", error);
-    res.status(400);
+    res.status(400).json({ status: false, message: "Error occurred" });
   }
 };
 
