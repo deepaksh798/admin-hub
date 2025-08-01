@@ -9,25 +9,50 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAppDispatch, useAppSelector } from "@/lib/Redux/Hook/hook";
-import { fetchCommunities } from "@/lib/Redux/Slice/communitiesSlice";
+import { getAllCommunities } from "@/network/Api";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
+import { toast } from "sonner";
 
 const Communities = () => {
+  const [communities, setCommunities] = React.useState<any>({});
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | null>(null);
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const communities = useAppSelector((state: any) => state.communities);
-  console.log("in comm before--->", communities);
 
   useEffect(() => {
-    dispatch(fetchCommunities());
+    fetchCommunities();
   }, []);
+
+  const fetchCommunities = () => {
+    setLoading(true);
+    getAllCommunities()
+      .then((response) => {
+        setCommunities(response.data.content);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        toast.error("Failed to fetch communities: " + error.message);
+        setLoading(false);
+      });
+  };
 
   // Open create-new-community
   const handleCreateNew = () => {
     router.push("/communities/create-new-community");
   };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (Object.keys(communities).length === 0) {
+    return <div>No communities found.</div>;
+  }
 
   return (
     <div>
@@ -40,29 +65,27 @@ const Communities = () => {
           <TableHeader>
             <TableRow>
               <TableHead>No.</TableHead>
-              <TableHead>Id</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Owner_Id</TableHead>
-              <TableHead>UpdatedAt</TableHead>
+              <TableHead>Community Name</TableHead>
+              <TableHead>Total Memebers</TableHead>
+              <TableHead>Created</TableHead>
+              <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {communities?.communities?.data?.map((data: any, index: any) => (
+            {communities?.data?.map((data: any, index: any) => (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{data.id}</TableCell>
                 <TableCell>{data.name}</TableCell>
-                <TableCell>{data.owner}</TableCell>
+                <TableCell>{data.members.length}</TableCell>
                 <TableCell>
-                  {new Date(data.updatedAt).toLocaleString("en-US", {
+                  {new Date(data.createdAt).toLocaleString("en-US", {
                     year: "numeric",
                     month: "short",
                     day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                    hour12: true,
                   })}
+                </TableCell>
+                <TableCell>
+                  <Button variant="outline">Manage</Button>
                 </TableCell>
               </TableRow>
             ))}

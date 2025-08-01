@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Image from "next/image";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { loginApi } from "@/network/Api";
 
 const Login = () => {
   const [error, setError] = useState("");
@@ -27,13 +28,8 @@ const Login = () => {
       return;
     }
     try {
-      const { data } = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/auth/signin`,
-        {
-          email,
-          password,
-        }
-      );
+      const payload = { email, password };
+      const { data } = await loginApi(payload);
       console.log("Login Successful", data);
       setToken(data.content.meta.access_token);
       router.push("/dashboard");

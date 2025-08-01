@@ -1,9 +1,9 @@
-import React from "react";
-import { Button } from "./ui/button";
+"use client";
+import React, { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { removeToken } from "@/_utils/cookies";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { LuUserRound } from "react-icons/lu";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,13 +12,32 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { LogOut, Settings, User } from "lucide-react";
+import { meApi } from "@/network/Api";
 
 const Navbar = () => {
   const router = useRouter();
+  const [user, setUser] = useState<{ name: string; email: string } | null>(
+    null
+  );
+
   const handleLogout = () => {
     removeToken();
     router.push("/login");
   };
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await meApi();
+      const { name, email } = response.data.content.data;
+      setUser({ name, email });
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
 
   return (
     <div className="flex w-full justify-between px-5 py-2 border-b border-[#E5E7EB]">
@@ -30,18 +49,14 @@ const Navbar = () => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="flex gap-3 items-center cursor-pointer">
-              <div>
-                <Image
-                  src="/profile.png"
-                  alt="profile"
-                  height={40}
-                  width={40}
-                  className="rounded-full"
-                />
+              <div className="w-10 h-10 rounded-full overflow-hidden border border-[#E5E7EB] bg-[#ecedee] flex items-center justify-center">
+                <LuUserRound className="h-full w-full text-[#6B7280]" />
               </div>
               <div className="leading-3">
-                <div className="font-medium text-base">John Smith</div>
-                <span className="text-[#6B7280]">john@example.com</span>
+                <div className="font-medium text-base">
+                  {user ? user.name : "Loading..."}
+                </div>
+                <span className="text-[#6B7280]">{user ? user.email : ""}</span>
               </div>
             </div>
           </DropdownMenuTrigger>

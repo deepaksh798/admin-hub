@@ -8,20 +8,44 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useAppDispatch, useAppSelector } from "@/lib/Redux/Hook/hook";
-import { fetchUsers } from "@/lib/Redux/Slice/usersSlice";
+import { getAllUsers } from "@/network/Api";
 import React, { useEffect } from "react";
+import { toast } from "sonner";
 
 const page = () => {
-  const dispatch = useAppDispatch();
-  const { users } = useAppSelector((state) => state.users);
+  const [users, setUsers] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | null>(null);
 
-  // Fetch new data
   useEffect(() => {
-    dispatch(fetchUsers());
+    fetchUsers();
   }, []);
 
-  console.log("users -----> ", users);
+  const fetchUsers = () => {
+    setLoading(true);
+    getAllUsers()
+      .then((response) => {
+        setUsers(response.data.content.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        toast.error("Failed to fetch users: " + error.message);
+        setLoading(false);
+      });
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (users.length === 0) {
+    return <div>No users found.</div>;
+  }
 
   return (
     <div>
