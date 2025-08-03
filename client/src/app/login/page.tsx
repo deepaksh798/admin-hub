@@ -4,45 +4,63 @@ import { setToken } from "@/_utils/cookies";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import Image from "next/image";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { loginApi } from "@/network/Api";
+import { loginApi, signupApi } from "@/network/Api";
 import { LuUserRound } from "react-icons/lu";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-const Login = () => {
+const Auth = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isSignup, setIsSignup] = useState(false);
   const router = useRouter();
 
-  const loginHandler = async (formData: FormData) => {
-    setLoading(true);
-    const email = formData.get("email") as string | undefined;
-    const password = formData.get("password") as string | undefined;
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-    if (!email || !password) {
-      setError("Please fill all fields.");
-      setLoading(false);
-      return;
-    }
-    try {
-      const payload = { email, password };
-      const { data } = await loginApi(payload);
-      console.log("Login Successful", data);
-      setToken(data.content.meta.access_token);
-      router.push("/dashboard");
-    } catch (error: any) {
-      setError(error.response?.data?.message || "Something went wrong");
-      setLoading(false);
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      name: isSignup ? Yup.string().required("Name is required") : Yup.string(),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+      password: Yup.string()
+        .min(6, "Password must be at least 6 characters")
+        .required("Password is required"),
+    }),
+    onSubmit: async (values) => {
+      setError("");
+      setLoading(true);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+      try {
+        if (isSignup) {
+          const { data } = await signupApi(values);
+          console.log("Signup successful", data);
+          setToken(data.content.meta.access_token);
+        } else {
+          const { data } = await loginApi({
+            email: values.email,
+            password: values.password,
+          });
+          console.log("Login successful", data);
+          setToken(data.content.meta.access_token);
+        }
+        router.push("/dashboard");
+      } catch (error: any) {
+        setError(error.response?.data?.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
 
   return (
     <div className="h-screen w-full flex flex-col justify-center items-center bg-gray-50">
@@ -51,56 +69,70 @@ const Login = () => {
           <div className="relative w-16 h-16 overflow-hidden border border-gray-300 rounded-full bg-gray-100">
             <LuUserRound className="h-full w-full text-[#6B7280] p-1" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-800">Welcome Back</h1>
+          <h1 className="text-3xl font-bold text-gray-800">
+            {isSignup ? "Create an Account" : "Welcome Back"}
+          </h1>
           <p className="text-gray-500 text-center">
-            Sign in to access your community
+            {isSignup
+              ? "Sign up to access your community"
+              : "Sign in to access your community"}
           </p>
         </div>
 
-        <form action={loginHandler} className="mt-8 space-y-6">
+        <form onSubmit={formik.handleSubmit} className="space-y-6">
           <div className="space-y-4">
+            {isSignup && (
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  placeholder="Your name"
+                  value={formik.values.name}
+                  onChange={formik.handleChange}
+                  className="w-full"
+                />
+                {formik.touched.name && formik.errors.name && (
+                  <p className="text-sm text-red-500">{formik.errors.name}</p>
+                )}
+              </div>
+            )}
+
             <div className="space-y-2">
-              <Label
-                htmlFor="email"
-                className="text-sm font-medium text-gray-700"
-              >
-                Email Address
-              </Label>
+              <Label htmlFor="email">Email Address</Label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
-                </div>
+                <Mail className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder="your.email@example.com"
                   name="email"
-                  className="pl-10 w-full py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  placeholder="your.email@example.com"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  className="pl-10"
                 />
               </div>
+              {formik.touched.email && formik.errors.email && (
+                <p className="text-sm text-red-500">{formik.errors.email}</p>
+              )}
             </div>
 
             <div className="space-y-2">
-              <Label
-                htmlFor="password"
-                className="text-sm font-medium text-gray-700"
-              >
-                Password
-              </Label>
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
+                <Lock className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
                   name="password"
-                  className="pl-10 pr-10 w-full py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  placeholder="••••••••"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  className="pl-10 pr-10"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 flex items-center pr-3"
+                  className="absolute right-3 top-2"
                   onClick={togglePasswordVisibility}
                 >
                   {showPassword ? (
@@ -110,6 +142,9 @@ const Login = () => {
                   )}
                 </button>
               </div>
+              {formik.touched.password && formik.errors.password && (
+                <p className="text-sm text-red-500">{formik.errors.password}</p>
+              )}
             </div>
           </div>
 
@@ -119,33 +154,40 @@ const Login = () => {
             </div>
           )}
 
-          <div className="flex items-center justify-between">
-            <div className="text-sm">
-              <a
-                href="#"
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                Forgot your password?
-              </a>
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition duration-150"
-            disabled={loading}
-          >
-            {loading ? "Signing in..." : "Sign in"}
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading
+              ? isSignup
+                ? "Signing up..."
+                : "Signing in..."
+              : isSignup
+              ? "Sign up"
+              : "Sign in"}
           </Button>
 
           <div className="text-center text-sm">
-            <span className="text-gray-500">Don't have an account? </span>
-            <a
-              href="#"
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
-              Sign up
-            </a>
+            {isSignup ? (
+              <>
+                <span className="text-gray-500">Already have an account? </span>
+                <button
+                  type="button"
+                  className="text-blue-600 hover:underline"
+                  onClick={() => setIsSignup(false)}
+                >
+                  Sign in
+                </button>
+              </>
+            ) : (
+              <>
+                <span className="text-gray-500">Don't have an account? </span>
+                <button
+                  type="button"
+                  className="text-blue-600 hover:underline"
+                  onClick={() => setIsSignup(true)}
+                >
+                  Sign up
+                </button>
+              </>
+            )}
           </div>
         </form>
       </div>
@@ -153,4 +195,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Auth;
