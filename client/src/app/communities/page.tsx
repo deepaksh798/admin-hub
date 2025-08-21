@@ -10,12 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -30,23 +24,27 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   Search,
-  MoreHorizontal,
-  Edit,
   Trash2,
   Users,
   Calendar,
   Plus,
   Building2,
-  Settings,
   Eye,
   Filter,
-  Download,
   RefreshCw,
-  TrendingUp,
 } from "lucide-react";
 import { getTimeAgo } from "@/utils/getTimeAgo";
 import { formatDate } from "@/utils/formatDate";
 import CommunitySkeleton from "@/components/Skeleton/CommunitySkeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import CreateCommunity from "@/components/CreateCommunity";
+import ManageCommunity from "@/components/ManageCommunity";
 
 const Communities = () => {
   const [communities, setCommunities] = useState<any>({});
@@ -55,7 +53,11 @@ const Communities = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("name");
-  const router = useRouter();
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openManageDialog, setOpenManageDialog] = useState(false);
+  const [selectedCommunityId, setSelectedCommunityId] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     fetchCommunities();
@@ -109,19 +111,15 @@ const Communities = () => {
   };
 
   const handleCreateNew = () => {
-    router.push("/communities/create-new-community");
+    setOpenCreateDialog(true);
   };
 
-  const handleView = (communityId: string) => {
-    toast.info("View community functionality to be implemented");
-  };
+  const handleDialogClose = () => setOpenCreateDialog(false);
 
-  const handleManage = (communityId: string) => {
-    toast.info("Manage community functionality to be implemented");
-  };
-
-  const handleEdit = (communityId: string) => {
-    toast.info("Edit community functionality to be implemented");
+  const handleManageDialogClose = () => {
+    setOpenManageDialog(false);
+    setSelectedCommunityId(null);
+    fetchCommunities();
   };
 
   const handleDelete = (communityId: string, communityName: string) => {
@@ -135,13 +133,13 @@ const Communities = () => {
         text: "No members",
         color: "bg-gray-100 text-gray-700",
       };
-    if (memberCount < 10)
+    if (memberCount < 5)
       return {
         variant: "secondary",
         text: `${memberCount} members`,
         color: "bg-blue-100 text-blue-700",
       };
-    if (memberCount < 50)
+    if (memberCount < 10)
       return {
         variant: "secondary",
         text: `${memberCount} members`,
@@ -179,7 +177,7 @@ const Communities = () => {
   };
 
   if (loading) {
-    <CommunitySkeleton />;
+    return <CommunitySkeleton />;
   }
 
   if (error) {
@@ -199,6 +197,35 @@ const Communities = () => {
 
   return (
     <div className="space-y-6">
+      {/* Dialog for Create Community */}
+      <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Community</DialogTitle>
+          </DialogHeader>
+          <CreateCommunity
+            onSuccess={fetchCommunities}
+            onClose={handleDialogClose}
+          />
+        </DialogContent>
+      </Dialog>
+      {/* Manage Community */}
+      <Dialog open={openManageDialog} onOpenChange={setOpenManageDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Manage Community</DialogTitle>
+          </DialogHeader>
+          <DialogDescription>
+      {selectedCommunityId && (
+        <ManageCommunity
+          communityId={selectedCommunityId}
+          onClose={handleManageDialogClose}
+        />
+      )}
+      </DialogDescription>
+        </DialogContent>
+      </Dialog>
+
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -345,7 +372,7 @@ const Communities = () => {
                         Active
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
@@ -358,22 +385,13 @@ const Communities = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48">
                           <DropdownMenuItem
-                            onClick={() => handleView(community.id)}
-                          >
-                            <Eye className="h-4 w-4 mr-2" />
-                            View Community
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleManage(community.id)}
+                            onClick={() => {
+                              setSelectedCommunityId(community.id);
+                              setOpenManageDialog(true);
+                            }}
                           >
                             <Settings className="h-4 w-4 mr-2" />
                             Manage
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleEdit(community.id)}
-                          >
-                            <Edit className="h-4 w-4 mr-2" />
-                            Edit Community
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() =>
@@ -386,6 +404,31 @@ const Communities = () => {
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
+                    </TableCell> */}
+                    <TableCell>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() => {
+                          setSelectedCommunityId(community.id);
+                          setOpenManageDialog(true);
+                        }}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() =>
+                          handleDelete(community.id, community.name)
+                        }
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 );

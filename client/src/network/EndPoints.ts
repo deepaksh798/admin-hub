@@ -15,5 +15,5 @@ export const ENDPOINTS = {
   GET_ROLES: "v1/role",
   CREATE_ROLE: "v1/role",
   // Member Endpoints
-  CREATE_COMMUNITY_MEMBERS: "v1/community/members",
+  CREATE_COMMUNITY_MEMBERS: "v1/member",
 };
