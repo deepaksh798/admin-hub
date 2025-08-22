@@ -7,6 +7,7 @@ import { LuUsers, LuCalendar } from "react-icons/lu";
 import { RiBuilding2Line } from "react-icons/ri";
 import { getDashboardData, meApi } from "@/network/Api";
 import { toast } from "sonner";
+import { getTimeAgo } from "@/utils/getTimeAgo";
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState<any>({});
@@ -144,7 +145,7 @@ const Dashboard = () => {
           </h2>
           <div className="flex items-center text-sm text-gray-500">
             <LuCalendar className="h-4 w-4 mr-1" />
-            Last 7 days
+            Date
           </div>
         </div>
 
@@ -171,7 +172,8 @@ const Dashboard = () => {
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-gray-500">
-                    {new Date(community.createdAt).toLocaleDateString()}
+                    {/* {new Date(community.createdAt).toLocaleDateString()} */}
+                    {getTimeAgo(community.createdAt)}
                   </p>
                 </div>
               </div>

@@ -35,7 +35,6 @@ import {
 } from "lucide-react";
 import { getTimeAgo } from "@/utils/getTimeAgo";
 import { formatDate } from "@/utils/formatDate";
-import CommunitySkeleton from "@/components/Skeleton/CommunitySkeleton";
 import {
   Dialog,
   DialogContent,
@@ -45,6 +44,7 @@ import {
 } from "@/components/ui/dialog";
 import CreateCommunity from "@/components/CreateCommunity";
 import ManageCommunity from "@/components/ManageCommunity";
+import LoadingSkeleton from "@/components/Skeleton/LoadingSkeleton";
 
 const Communities = () => {
   const [communities, setCommunities] = useState<any>({});
@@ -176,10 +176,6 @@ const Communities = () => {
       .slice(0, 2);
   };
 
-  if (loading) {
-    return <CommunitySkeleton />;
-  }
-
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-64 space-y-4">
@@ -216,13 +212,13 @@ const Communities = () => {
             <DialogTitle>Manage Community</DialogTitle>
           </DialogHeader>
           <DialogDescription>
-      {selectedCommunityId && (
-        <ManageCommunity
-          communityId={selectedCommunityId}
-          onClose={handleManageDialogClose}
-        />
-      )}
-      </DialogDescription>
+            {selectedCommunityId && (
+              <ManageCommunity
+                communityId={selectedCommunityId}
+                onClose={handleManageDialogClose}
+              />
+            )}
+          </DialogDescription>
         </DialogContent>
       </Dialog>
 
@@ -274,7 +270,9 @@ const Communities = () => {
       </div>
 
       {/* Table Section */}
-      {filteredCommunities.length === 0 ? (
+      {loading ? (
+        <LoadingSkeleton />
+      ) : filteredCommunities.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg border border-gray-200">
           <Building2 className="h-12 w-12 text-gray-400 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">

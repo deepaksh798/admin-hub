@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import { formatDate } from "@/utils/formatDate";
 import { getTimeAgo } from "@/utils/getTimeAgo";
-import RoleSkeleton from "@/components/Skeleton/RoleSkeleton";
+import LoadingSkeleton from "@/components/Skeleton/LoadingSkeleton";
 
 const Roles = () => {
   const router = useRouter();
@@ -81,10 +81,6 @@ const Roles = () => {
     // Add delete confirmation and functionality
     toast.info(`Delete ${roleName} functionality to be implemented`);
   };
-
-  if (loading) {
-    <RoleSkeleton />;
-  }
 
   if (error) {
     return (
@@ -136,7 +132,7 @@ const Roles = () => {
       </div>
 
       {/* Table Section */}
-      {filteredRoles.length === 0 ? (
+      {loading ? (<LoadingSkeleton/>) :filteredRoles.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg border border-gray-200">
           <Users className="h-12 w-12 text-gray-400 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
