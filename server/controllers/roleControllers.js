@@ -46,13 +46,7 @@ const getAllRole = async (req, res) => {
     console.log("-------we are here----------");
 
     if (!data) {
-      res.status(400);
-      throw new Error("not found");
-    }
-
-    if (data.length === 0) {
-      res.status(400);
-      throw new Error("no roles are there!");
+      return res.status(404).json({ message: "No roles found" });
     }
 
     const length = Math.floor(data.length / 5);

@@ -118,6 +118,9 @@ const getAllUsers = async (req, res) => {
 
     // Fetch all users except the password field
     const users = await User.find({}, "-password");
+    if (!users) {
+      return res.status(404).json({ message: "No users found" });
+    }
 
     const length = Math.floor(data.length / 5);
 

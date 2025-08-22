@@ -88,7 +88,6 @@ const getAllMembers = async (req, res) => {
     if (!members) {
       console.log("Community not found");
       res.statue(404);
-      throw new Error("Members not found");
     }
 
     res.status(200).json({ statue: true, content: { data: members } });
