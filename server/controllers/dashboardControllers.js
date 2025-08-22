@@ -4,6 +4,8 @@ const User = require("../models/userModel");
 
 const getDashboardStats = async (req, res) => {
   try {
+    const userId = req.user.id; // Get current user's ID
+
     // Get today's date at midnight
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -19,15 +21,15 @@ const getDashboardStats = async (req, res) => {
       todayRoleCount,
       todayUserCount,
     ] = await Promise.all([
-      Community.countDocuments(),
-      Role.countDocuments(),
-      User.countDocuments(),
-      Community.find().sort({ createdAt: -1 }).limit(5),
-      Role.find().sort({ createdAt: -1 }).limit(5),
-      User.find({}, "-password").sort({ createdAt: -1 }).limit(5),
-      Community.countDocuments({ createdAt: { $gte: today } }),
-      Role.countDocuments({ createdAt: { $gte: today } }),
-      User.countDocuments({ createdAt: { $gte: today } }),
+      Community.countDocuments({ owner: userId }),
+      Role.countDocuments({ owner: userId }),
+      1, // Only the current user
+      Community.find({ owner: userId }).sort({ createdAt: -1 }).limit(5),
+      Role.find({ owner: userId }).sort({ createdAt: -1 }).limit(5),
+      User.find({ id: userId }, "-password").sort({ createdAt: -1 }).limit(1),
+      Community.countDocuments({ owner: userId, createdAt: { $gte: today } }),
+      Role.countDocuments({ owner: userId, createdAt: { $gte: today } }),
+      1, // Only the current user
     ]);
 
     res.status(200).json({

@@ -41,11 +41,8 @@ const getAllCommunity = async (req, res) => {
     console.log("we are in GetCommunity");
     data = await Community.find();
 
-    console.log("get data---->", data);
-
     if (!data) {
-      res.status(400);
-      throw new Error("not found");
+      res.status(200).json({ status: 400, message: "No communities found" });
     }
     if (data.length === 0) {
       res.status(200).json({ status: 400, message: "No communities found" });
@@ -74,9 +71,7 @@ const getAllMembers = async (req, res) => {
     const community = await Community.find({ slug: slug });
 
     if (!community) {
-      console.log("community not found");
-      res.status(200);
-      throw new Error("community not found");
+      res.status(200).json({ status: 400, message: "Community not found" });
     }
 
     console.log("community-->", community);
@@ -86,8 +81,7 @@ const getAllMembers = async (req, res) => {
     console.log("members", members);
 
     if (!members) {
-      console.log("Community not found");
-      res.statue(404);
+      res.statue(400).json({ message: "No members found" });
     }
 
     res.status(200).json({ statue: true, content: { data: members } });
@@ -100,11 +94,8 @@ const getAllMembers = async (req, res) => {
 const getMyOwnedCommunity = async (req, res) => {
   try {
     const communities = await Community.find({ owner: req.user.id });
-
     if (!communities) {
-      console.log("Community not found");
-      res.status(404);
-      throw new Error("Community not found");
+      res.status(200).json({ status: 400, message: "No communities found" });
     }
 
     res.status(200).json({
