@@ -14,16 +14,24 @@ const createMember = async (req, res) => {
         status: false,
         message: "Community, user and role are required",
       });
-      console.log("community, user and role required");
       return;
     }
 
     const communityDoc = await Community.findOne({ id: community });
     if (!communityDoc) {
-      console.log("community not found");
       return res
         .status(404)
         .json({ status: false, message: "Community not found" });
+    }
+
+    // Check if user already exists in community
+    const userExists = communityDoc.members.some(
+      (member) => member.user && member.user.id === user
+    );
+    if (userExists) {
+      return res
+        .status(400)
+        .json({ status: false, message: "User already exists in community" });
     }
 
     const roleDoc = await Role.findOne({ id: role });

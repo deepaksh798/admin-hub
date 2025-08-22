@@ -122,12 +122,12 @@ const getAllUsers = async (req, res) => {
       return res.status(404).json({ message: "No users found" });
     }
 
-    const length = Math.floor(data.length / 5);
+    const length = Math.floor(users.length / 5);
 
     res.status(200).json({
       status: true,
       content: {
-        meta: {total: data.length, pages: length},
+        meta: { total: users.length, pages: length },
         data: users,
       },
     });
