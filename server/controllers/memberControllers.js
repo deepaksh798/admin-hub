@@ -82,4 +82,25 @@ const createMember = async (req, res) => {
   }
 };
 
-module.exports = { createMember };
+const deleteMember = async (req, res) => {
+  try {
+    const memberId = req.params.id;
+    const member = await Member.findOneAndDelete({ id: memberId });
+    if (!member) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Member not found" });
+    }
+    // Also remove member from community's members array
+    await Community.updateOne(
+      { name: member.community },
+      { $pull: { members: { "user.id": member.user } } }
+    );
+    res.status(200).json({ status: true, message: "Member deleted successfully" });
+  } catch (error) {
+    console.log("error-->", error);
+    res.status(500).json({ status: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports = { createMember, deleteMember };

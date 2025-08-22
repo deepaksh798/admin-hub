@@ -68,4 +68,21 @@ const getAllRole = async (req, res) => {
   }
 };
 
-module.exports = { createRole, getAllRole };
+const deleteRole = async (req, res) => {
+  try {
+    const roleId = req.params.id;
+
+    const role = await Role.findOneAndDelete({ id: roleId, owner: req.user.id });
+
+    if (!role) {
+      return res.status(404).json({ status: false, message: "Role not found" });
+    }
+
+    res.status(200).json({ status: true, message: "Role deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting role:", error);
+    res.status(500).json({ status: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports = { createRole, getAllRole, deleteRole };

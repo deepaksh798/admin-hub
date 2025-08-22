@@ -36,6 +36,24 @@ const createCommunity = async (req, res) => {
   }
 };
 
+const deleteCommunity = async (req, res) => {
+  try {
+    const communityId = req.params.id;
+    const community = await Community.findOneAndDelete({ id: communityId });
+    if (!community) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Community not found" });
+    }
+    res
+      .status(200)
+      .json({ status: true, message: "Community deleted successfully" });
+  } catch (error) {
+    console.log("error-->", error);
+    res.status(500).json({ status: false, message: "Internal Server Error" });
+  }
+};
+
 const getAllCommunity = async (req, res) => {
   try {
     console.log("we are in GetCommunity");
@@ -127,6 +145,7 @@ const getMyJoinedCommunity = async (req, res) => {
 
 module.exports = {
   createCommunity,
+  deleteCommunity,
   getAllCommunity,
   getAllMembers,
   getMyOwnedCommunity,

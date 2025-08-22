@@ -6,11 +6,14 @@ const {
   getAllMembers,
   getMyOwnedCommunity,
   getMyJoinedCommunity,
+  deleteCommunity,
 } = require("../controllers/communityControllers");
 
 const router = express.Router();
 
 router.post("/", protect, createCommunity);
+
+router.post("/delete/:id", protect, deleteCommunity);
 
 router.get("/", protect, getAllCommunity);
 
