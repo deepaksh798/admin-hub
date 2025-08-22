@@ -7,6 +7,7 @@ export const ENDPOINTS = {
   // User Endpoints
   ME: "v1/auth/me",
   // community Endpoints
+  GET_MY_OWNED_COMMUNITIES: "v1/community/me/owner",
   GET_ALL_COMMUNITIES: "v1/community",
   CREATE_COMMUNITY: "v1/community",
   // User Endpoints

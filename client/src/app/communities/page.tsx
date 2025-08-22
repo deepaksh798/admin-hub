@@ -18,8 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getAllCommunities } from "@/network/Api";
-import { useRouter } from "next/navigation";
+import { getAllCommunities, getMyOwnedCommunities } from "@/network/Api";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -98,7 +97,7 @@ const Communities = () => {
   const fetchCommunities = () => {
     setLoading(true);
     setError(null);
-    getAllCommunities()
+    getMyOwnedCommunities()
       .then((response) => {
         setCommunities(response.data.content);
         setLoading(false);
@@ -370,39 +369,6 @@ const Communities = () => {
                         Active
                       </Badge>
                     </TableCell>
-                    {/* <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0"
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48">
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setSelectedCommunityId(community.id);
-                              setOpenManageDialog(true);
-                            }}
-                          >
-                            <Settings className="h-4 w-4 mr-2" />
-                            Manage
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() =>
-                              handleDelete(community.id, community.name)
-                            }
-                            className="text-red-600 focus:text-red-600"
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete Community
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell> */}
                     <TableCell>
                       <Button
                         variant="outline"

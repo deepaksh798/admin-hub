@@ -15,6 +15,11 @@ export const meApi = () => {
 };
 
 // Community API's
+
+export const getMyOwnedCommunities = () => {
+  return getRequest(ENDPOINTS.GET_MY_OWNED_COMMUNITIES);
+};
+
 export const getAllCommunities = () => {
   return getRequest(ENDPOINTS.GET_ALL_COMMUNITIES);
 };
