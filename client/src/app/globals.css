@@ -74,3 +74,53 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.auth-loader {
+  width: 64px;
+  height: 44px;
+  position: relative;
+  border: 5px solid #2563EB;
+  border-radius: 8px;
+}
+
+.auth-loader::before {
+  content: '';
+  position: absolute;
+  border: 5px solid #2563EB;
+  width: 32px;
+  height: 28px;
+  border-radius: 50% 50% 0 0;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -100%);
+}
+
+.auth-loader::after {
+  content: '';
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #2563EB;
+  box-shadow: 16px 0 #2563EB, -16px 0 #2563EB;
+  animation: flash 0.5s ease-out infinite alternate;
+}
+
+@keyframes flash {
+  0% {
+    background-color: rgba(37, 99, 235, 0.25);
+    box-shadow: 16px 0 rgba(37, 99, 235, 0.25), -16px 0 rgba(37, 99, 235, 1);
+  }
+  50% {
+    background-color: rgba(37, 99, 235, 1);
+    box-shadow: 16px 0 rgba(37, 99, 235, 0.25), -16px 0 rgba(37, 99, 235, 0.25);
+  }
+  100% {
+    background-color: rgba(37, 99, 235, 0.25);
+    box-shadow: 16px 0 rgba(37, 99, 235, 1), -16px 0 rgba(37, 99, 235, 0.25);
+  }
+}
+ 

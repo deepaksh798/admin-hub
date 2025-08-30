@@ -28,6 +28,10 @@ export const createCommunity = (payload: any) => {
   return postRequest(ENDPOINTS.CREATE_COMMUNITY, payload);
 };
 
+export const deleteCommunity = (communityId: string) => {
+  return postRequest(`${ENDPOINTS.DELETE_COMMUNITY}/${communityId}`);
+}
+
 // User API's
 export const getAllUsers = () => {
   return getRequest(ENDPOINTS.GET_ALL_USERS);

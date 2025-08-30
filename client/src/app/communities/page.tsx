@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getAllCommunities, getMyOwnedCommunities } from "@/network/Api";
+import { deleteCommunity, getMyOwnedCommunities } from "@/network/Api";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -54,7 +54,7 @@ const Communities = () => {
   const [sortBy, setSortBy] = useState<string>("name");
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openManageDialog, setOpenManageDialog] = useState(false);
-  const [selectedCommunityId, setSelectedCommunityId] = useState<string | null>(
+  const [selectedCommunityDetails, setSelectedCommunityDetails] = useState<string | null>(
     null
   );
 
@@ -117,12 +117,21 @@ const Communities = () => {
 
   const handleManageDialogClose = () => {
     setOpenManageDialog(false);
-    setSelectedCommunityId(null);
+    setSelectedCommunityDetails(null);
     fetchCommunities();
   };
 
   const handleDelete = (communityId: string, communityName: string) => {
-    toast.info(`Delete ${communityName} functionality to be implemented`);
+    if (window.confirm(`Are you sure you want to delete "${communityName}"? This action cannot be undone.`)) {
+      deleteCommunity(communityId)
+        .then(() => {
+          toast.success(`Community "${communityName}" deleted successfully.`);
+          fetchCommunities();
+        })
+        .catch((error) => {
+          toast.error("Failed to delete community: " + error.message);
+        });
+    }
   };
 
   const getMemberCountBadge = (memberCount: number) => {
@@ -211,9 +220,9 @@ const Communities = () => {
             <DialogTitle>Manage Community</DialogTitle>
           </DialogHeader>
           <DialogDescription>
-            {selectedCommunityId && (
+            {selectedCommunityDetails && (
               <ManageCommunity
-                communityId={selectedCommunityId}
+                communityDetails={selectedCommunityDetails}
                 onClose={handleManageDialogClose}
               />
             )}
@@ -375,7 +384,7 @@ const Communities = () => {
                         size="sm"
                         className="h-8 w-8 p-0"
                         onClick={() => {
-                          setSelectedCommunityId(community.id);
+                          setSelectedCommunityDetails(community);
                           setOpenManageDialog(true);
                         }}
                       >

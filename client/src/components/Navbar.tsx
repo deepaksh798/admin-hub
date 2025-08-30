@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
 import { removeToken } from "@/_utils/cookies";
 import { useRouter } from "next/navigation";
 import {
@@ -16,15 +14,8 @@ import {
 } from "./ui/dropdown-menu";
 import {
   LogOut,
-  Settings,
-  User,
-  Search,
-  Bell,
   HelpCircle as Help,
-  Moon,
-  Sun,
   ChevronDown,
-  Shield,
 } from "lucide-react";
 import { meApi } from "@/network/Api";
 
@@ -34,20 +25,10 @@ const Navbar = () => {
     null
   );
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [notifications] = useState(3); // Mock notification count
 
   const handleLogout = () => {
     removeToken();
     router.push("/login");
-  };
-
-  const handleProfile = () => {
-    router.push("/profile");
-  };
-
-  const handleSettings = () => {
-    router.push("/settings");
   };
 
   const handleHelp = () => {
@@ -89,14 +70,6 @@ const Navbar = () => {
     ];
     const index = email?.charCodeAt(0) % colors.length || 0;
     return colors[index];
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      // Implement search functionality
-      console.log("Searching for:", searchQuery);
-    }
   };
 
   useEffect(() => {
@@ -168,32 +141,6 @@ const Navbar = () => {
                   </p>
                 </div>
               </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem
-                onClick={handleProfile}
-                className="cursor-pointer"
-              >
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                onClick={handleSettings}
-                className="cursor-pointer"
-              >
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                onClick={() => router.push("/admin")}
-                className="cursor-pointer"
-              >
-                <Shield className="mr-2 h-4 w-4" />
-                <span>Admin Panel</span>
-              </DropdownMenuItem>
-
               <DropdownMenuSeparator />
 
               <DropdownMenuItem onClick={handleHelp} className="cursor-pointer">

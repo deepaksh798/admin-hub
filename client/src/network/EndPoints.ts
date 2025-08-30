@@ -10,6 +10,7 @@ export const ENDPOINTS = {
   GET_MY_OWNED_COMMUNITIES: "v1/community/me/owner",
   GET_ALL_COMMUNITIES: "v1/community",
   CREATE_COMMUNITY: "v1/community",
+  DELETE_COMMUNITY: "V1/community/delete",
   // User Endpoints
   GET_ALL_USERS: "v1/auth/users",
   // ROLE Endpoints
