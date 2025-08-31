@@ -11,13 +11,13 @@ const HelpComponent = () => {
     if (feedback.trim()) {
       setFeedbackSubmitted(true);
       setFeedback('');
-      setTimeout(() => setFeedbackSubmitted(false), 3000);
+      // setTimeout(() => setFeedbackSubmitted(false), 3000);
     }
   };
 
   return (
-    <div className="h-screen overflow-y-auto">
-    <div className="max-w-4xl mx-auto bg-gray-50 pb-[15vh] ">
+    <div className="h-full">
+    <div className="h-full max-w-4xl mx-auto bg-gray-50 ">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg p-6 mb-6">
         <h1 className="text-3xl font-bold mb-2">AdminHub Help</h1>
@@ -98,7 +98,7 @@ const HelpComponent = () => {
       </div>
 
       {/* Developer Contact */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-6 pb-4">
         {/* Contact Info */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Developer Contact</h2>
@@ -120,7 +120,7 @@ const HelpComponent = () => {
               <div>
                 <p className="font-semibold">Phone</p>
                 <a href="tel:+919876543210" className="text-green-600 hover:underline">
-                  +91 98765 43210
+                  +91 7987887538
                 </a>
               </div>
             </div>

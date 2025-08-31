@@ -60,7 +60,7 @@ if (isAuthenticated) {
       <SideNavbar />
       <div className="flex-1 flex flex-col">
         <Navbar />
-        <div className="pt-8 px-8">{children}</div>
+        <div className="py-8 px-8 h-full overflow-y-scroll">{children}</div>
       </div>
     </div>
   );
