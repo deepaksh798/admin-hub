@@ -77,7 +77,7 @@ const Auth = () => {
           </p>
         </div>
 
-        <form onSubmit={formik.handleSubmit} className="space-y-6">
+        <form onSubmit={formik.handleSubmit} className="space-y-6" autoComplete={isSignup ? "off" : "on"}>
           <div className="space-y-4">
             {isSignup && (
               <div className="space-y-2">
