@@ -116,8 +116,11 @@ const getAllUsers = async (req, res) => {
   try {
     console.log("GetAllUsers api running");
 
-    // Fetch all users except the password field
-    const users = await User.find({}, "-password");
+    // Exclude the current user from the results
+    const users = await User.find(
+      { id: { $ne: req.user.id } }, // Exclude current user
+      "-password"
+    );
     if (!users) {
       return res.status(404).json({ message: "No users found" });
     }

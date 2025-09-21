@@ -39,6 +39,7 @@ const Dashboard = () => {
           toast.error(
             response.data.message || "Failed to fetch dashboard data."
           );
+          setError(response.data.message || "Failed to fetch dashboard data.");
         }
       })
       .catch((err) => {

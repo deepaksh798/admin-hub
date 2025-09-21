@@ -55,7 +55,7 @@ const Auth = () => {
         }
         router.push("/dashboard");
       } catch (error: any) {
-        setError(error.response?.data?.message || "Something went wrong");
+        setError(error?.message || "Something went wrong");
       } finally {
         setLoading(false);
       }

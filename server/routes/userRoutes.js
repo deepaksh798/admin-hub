@@ -5,6 +5,7 @@ const {
   getUserDetails,
   getAllUsers,
 } = require("../controllers/userControllers");
+const {protect} = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -14,6 +15,6 @@ router.post("/signin", signin);
 
 router.get("/me", getUserDetails);
 
-router.get("/users", getAllUsers);
+router.get("/users", protect, getAllUsers);
 
 module.exports = router;

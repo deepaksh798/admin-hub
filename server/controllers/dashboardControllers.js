@@ -23,13 +23,13 @@ const getDashboardStats = async (req, res) => {
     ] = await Promise.all([
       Community.countDocuments({ owner: userId }),
       Role.countDocuments({ owner: userId }),
-      1, // Only the current user
+      User.countDocuments({}), // Total users in the system
       Community.find({ owner: userId }).sort({ createdAt: -1 }).limit(5),
       Role.find({ owner: userId }).sort({ createdAt: -1 }).limit(5),
       User.find({ id: userId }, "-password").sort({ createdAt: -1 }).limit(1),
       Community.countDocuments({ owner: userId, createdAt: { $gte: today } }),
       Role.countDocuments({ owner: userId, createdAt: { $gte: today } }),
-      1, // Only the current user
+      User.countDocuments({ createdAt: { $gte: today } }),
     ]);
 
     res.status(200).json({
