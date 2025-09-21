@@ -8,8 +8,8 @@ const Members = require("../models/memberModel");
 const createCommunity = async (req, res) => {
 
   try {
-    const { name, owner } = req.body;
-    if (!name || !owner) {
+    const { name } = req.body;
+    if (!name) {
       console.log("ALL FIELDS ARE MENDATORY");
       return res
         .status(400)
