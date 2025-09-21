@@ -6,12 +6,14 @@ const Members = require("../models/memberModel");
 // Create Community
 
 const createCommunity = async (req, res) => {
-  console.log("we are in createCommunity", req.body);
 
   try {
     const { name, owner } = req.body;
     if (!name || !owner) {
       console.log("ALL FIELDS ARE MENDATORY");
+      return res
+        .status(400)
+        .json({ message: "Please provide all required fields" });
     }
 
     const data = {
@@ -20,9 +22,6 @@ const createCommunity = async (req, res) => {
       owner: req.user.id,
       slug: name,
     };
-
-    console.log("data-->", data);
-    // console.log("req.user.id --->", req.user.id);
 
     const community = await Community.create(data);
     if (community) {
@@ -33,6 +32,7 @@ const createCommunity = async (req, res) => {
     }
   } catch (error) {
     console.log("error-->", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -56,7 +56,6 @@ const deleteCommunity = async (req, res) => {
 
 const getAllCommunity = async (req, res) => {
   try {
-    console.log("we are in GetCommunity");
     data = await Community.find();
 
     if (!data) {
@@ -64,7 +63,6 @@ const getAllCommunity = async (req, res) => {
     }
     if (data.length === 0) {
       res.status(200).json({ status: 400, message: "No communities found" });
-      console.log("No communities found");
       return;
     }
 
@@ -92,11 +90,9 @@ const getAllMembers = async (req, res) => {
       res.status(200).json({ status: 400, message: "Community not found" });
     }
 
-    console.log("community-->", community);
     const members = await Members.find({ community: community[0].id })
       .populate("user", "name")
       .populate("role", "name");
-    console.log("members", members);
 
     if (!members) {
       res.statue(400).json({ message: "No members found" });
@@ -132,11 +128,9 @@ const getMyOwnedCommunity = async (req, res) => {
 
 const getMyJoinedCommunity = async (req, res) => {
   try {
-    console.log("req.user==>", req.user.id);
     const data = await Members.find({ user: req.user.id }).populate(
       "community"
     );
-    console.log("data", data);
     res.status(200).json({ statue: true, content: { data: data } });
   } catch (error) {
     console.log(error);

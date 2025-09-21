@@ -43,14 +43,12 @@ const Auth = () => {
       try {
         if (isSignup) {
           const { data } = await signupApi(values);
-          console.log("Signup successful", data);
           setToken(data.content.meta.access_token);
         } else {
           const { data } = await loginApi({
             email: values.email,
             password: values.password,
           });
-          console.log("Login successful", data);
           setToken(data.content.meta.access_token);
         }
         router.push("/dashboard");

@@ -36,18 +36,13 @@ const createMember = async (req, res) => {
 
     const roleDoc = await Role.findOne({ id: role });
     if (!roleDoc) {
-      console.log("role not found");
       return res.status(404).json({ status: false, message: "Role not found" });
     }
 
     const userDoc = await User.findOne({ id: user });
     if (!userDoc) {
-      console.log("user not found");
       return res.status(404).json({ status: false, message: "User not found" });
     }
-
-    console.log("Creating member for community:", communityDoc);
-    console.log("User:", userDoc, "Role:", roleDoc);
 
     // Create member object
     const memberData = {

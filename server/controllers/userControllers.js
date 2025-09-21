@@ -8,12 +8,13 @@ const generateToken = require("../middleware/generateToken");
 // USER REGISTRATION
 
 const signup = async (req, res) => {
-  console.log("we are in signup", req.body);
   try {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      console.log("ALL FIELDS ARE MENDATORY");
+      return res
+        .status(400)
+        .json({ message: "Please provide all required fields" });
     }
 
     const userExist = await User.findOne({ email });
@@ -31,7 +32,6 @@ const signup = async (req, res) => {
     };
 
     const token = await generateToken(data.id);
-    console.log("token--->", token);
 
     const user = await User.create(data);
     if (user) {
@@ -66,7 +66,6 @@ const signin = async (req, res) => {
     }
 
     const token = await generateToken(user.id);
-    console.log("token-->", token);
 
     return res.status(200).json({
       status: true,
@@ -80,7 +79,6 @@ const signin = async (req, res) => {
 
 const getUserDetails = async (req, res) => {
   try {
-    console.log("WE ARE IN GetUserDetails");
     let token;
 
     if (
@@ -90,10 +88,8 @@ const getUserDetails = async (req, res) => {
       token = req.headers.authorization.split(" ")[1];
 
       const { id } = jwt.verify(token, process.env.TOKEN_KEY);
-      console.log("Decrypt Token-->", id);
 
       const user = await User.findOne({ id }, "-password");
-      console.log("user", user);
 
       if (!user) {
         res.status(400);
@@ -114,8 +110,6 @@ const getUserDetails = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    console.log("GetAllUsers api running");
-
     // Exclude the current user from the results
     const users = await User.find(
       { id: { $ne: req.user.id } }, // Exclude current user

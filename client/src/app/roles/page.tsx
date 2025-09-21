@@ -57,7 +57,6 @@ const Roles = () => {
     getRoles()
       .then((response) => {
         setRoles(response.data.content.data);
-        console.log("Roles response:", response.data.content);
         setLoading(false);
       })
       .catch((error) => {

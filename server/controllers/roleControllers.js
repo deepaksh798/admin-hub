@@ -4,12 +4,13 @@ const Role = require("../models/roleModel");
 // Create Role
 
 const createRole = async (req, res) => {
-  console.log("We are in CreateRole");
 
   try {
     const { name } = req.body;
     if (!name) {
-      console.log("All fields are Mendatory");
+      return res
+        .status(400)
+        .json({ message: "Please provide all required fields" });
     }
 
     const data = {
@@ -18,12 +19,7 @@ const createRole = async (req, res) => {
       owner: req.user.id,
     };
 
-    console.log("data-->", data);
-
     const role = await Role.create(data);
-
-    console.log("roleData >>>> ", data);
-    console.log("role >>>> ", role);
 
     if (role) {
       res.status(200).json({
@@ -40,10 +36,7 @@ const createRole = async (req, res) => {
 
 const getAllRole = async (req, res) => {
   try {
-    console.log("We are in getAllRole");
-
     const data = await Role.find({ owner: req.user.id });
-    console.log("-------we are here----------");
 
     if (!data) {
       return res.status(404).json({ message: "No roles found" });
@@ -62,7 +55,6 @@ const getAllRole = async (req, res) => {
       },
     });
 
-    console.log("getallrole--->", data);
   } catch (error) {
     console.log(error);
   }

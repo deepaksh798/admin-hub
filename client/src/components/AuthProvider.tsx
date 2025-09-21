@@ -18,8 +18,6 @@ const AuthProvider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
   const token = getToken();
-  console.log("token", token);
-
   const isLoginPage = pathname === "/login";
 
   if (token) {

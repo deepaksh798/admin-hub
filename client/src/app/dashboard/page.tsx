@@ -33,7 +33,6 @@ const Dashboard = () => {
     getDashboardData()
       .then((response) => {
         if (response.data.status) {
-          console.log("Dashboard Data:", response.data.content);
           setDashboardData(response.data.content);
         } else {
           toast.error(
