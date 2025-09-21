@@ -10,12 +10,6 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -29,15 +23,10 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   Search,
-  MoreHorizontal,
-  Edit,
-  Trash2,
   Users,
   Calendar,
   Mail,
-  UserPlus,
   Filter,
-  Download,
   RefreshCw,
 } from "lucide-react";
 import { formatDate } from "@/utils/formatDate";
@@ -101,22 +90,6 @@ const UsersPage = () => {
       });
   };
 
-  const handleEdit = (userId: string) => {
-    toast.info("Edit user functionality to be implemented");
-  };
-
-  const handleDelete = (userId: string, userName: string) => {
-    toast.info(`Delete ${userName} functionality to be implemented`);
-  };
-
-  const handleInviteUser = () => {
-    toast.info("Invite user functionality to be implemented");
-  };
-
-  const handleExport = () => {
-    toast.info("Export users functionality to be implemented");
-  };
-
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -166,16 +139,6 @@ const UsersPage = () => {
             Manage and monitor all users across your platform
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleExport}>
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-          <Button onClick={handleInviteUser}>
-            <UserPlus className="h-4 w-4 mr-2" />
-            Invite User
-          </Button>
-        </div>
       </div>
 
       {/* Search and Filter */}
@@ -223,12 +186,7 @@ const UsersPage = () => {
               ? `No users match "${searchTerm}". Try adjusting your search.`
               : "Start by inviting users to join your platform."}
           </p>
-          {!searchTerm && (
-            <Button onClick={handleInviteUser}>
-              <UserPlus className="h-4 w-4 mr-2" />
-              Invite Your First User
-            </Button>
-          )}
+         
         </div>
       ) : (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
@@ -306,32 +264,6 @@ const UsersPage = () => {
                     >
                       Active
                     </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48">
-                        <DropdownMenuItem onClick={() => handleEdit(user.id)}>
-                          <Edit className="h-4 w-4 mr-2" />
-                          Edit User
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleDelete(user.id, user.name)}
-                          className="text-red-600 focus:text-red-600"
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Delete User
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ))}

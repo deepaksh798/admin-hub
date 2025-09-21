@@ -10,22 +10,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { getRoles } from "@/network/Api";
-import { useRouter } from "next/navigation";
+import { deleteRole, getRoles } from "@/network/Api";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   Plus,
   Search,
-  MoreHorizontal,
-  Edit,
   Trash2,
   Users,
   Calendar,
@@ -33,14 +24,22 @@ import {
 import { formatDate } from "@/utils/formatDate";
 import { getTimeAgo } from "@/utils/getTimeAgo";
 import LoadingSkeleton from "@/components/Skeleton/LoadingSkeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import CreateRole from "@/components/CreateRole";
 
 const Roles = () => {
-  const router = useRouter();
   const [roles, setRoles] = useState<any[]>([]);
   const [filteredRoles, setFilteredRoles] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
   useEffect(() => {
     fetchRoles();
@@ -69,17 +68,27 @@ const Roles = () => {
   };
 
   const handleCreateNew = () => {
-    router.push("/communities/create-new-role");
+    setOpenCreateDialog(true);
   };
 
-  const handleEdit = (roleId: string) => {
-    // Add edit functionality
-    toast.info("Edit functionality to be implemented");
-  };
+  const handleDialogClose = () => {
+    setOpenCreateDialog(false);
+    fetchRoles();
+  }
 
   const handleDelete = (roleId: string, roleName: string) => {
-    // Add delete confirmation and functionality
-    toast.info(`Delete ${roleName} functionality to be implemented`);
+    // Add delete functionality
+    if (!confirm(`Are you sure you want to delete the role "${roleName}"? This action cannot be undone.`)) {
+      return;
+    }
+    deleteRole(roleId)
+      .then(() => {
+        toast.success(`Role "${roleName}" deleted successfully`);
+        fetchRoles();
+      })
+      .catch((error) => {
+        toast.error("Failed to delete role: " + error.message);
+      });
   };
 
   if (error) {
@@ -98,6 +107,20 @@ const Roles = () => {
 
   return (
     <div className="space-y-6">
+      <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Create New Role</DialogTitle>
+          </DialogHeader>
+            <DialogDescription>
+              <CreateRole
+                onSuccess={fetchRoles}
+                onClose={handleDialogClose}
+              />
+            </DialogDescription>
+        </DialogContent>
+      </Dialog>
+
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -209,32 +232,17 @@ const Roles = () => {
                       Active
                     </Badge>
                   </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48">
-                        <DropdownMenuItem onClick={() => handleEdit(role.id)}>
-                          <Edit className="h-4 w-4 mr-2" />
-                          Edit Role
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleDelete(role.id, role.name)}
-                          className="text-red-600 focus:text-red-600"
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Delete Role
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+                 
+                 <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-red-500 hover:bg-red-100"
+                    onClick={() => handleDelete(role.id, role.name)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                 </TableCell>
                 </TableRow>
               ))}
             </TableBody>

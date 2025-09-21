@@ -16,6 +16,7 @@ export const ENDPOINTS = {
   // ROLE Endpoints
   GET_ROLES: "v1/role",
   CREATE_ROLE: "v1/role",
+  DELETE_ROLE: "v1/role/delete",
   // Member Endpoints
   CREATE_COMMUNITY_MEMBERS: "v1/member",
 };

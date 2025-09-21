@@ -46,6 +46,10 @@ export const createRole = (payload: any) => {
   return postRequest(ENDPOINTS.CREATE_ROLE, payload);
 };
 
+export const deleteRole = (payload: string) => {
+  return getRequest(`${ENDPOINTS.DELETE_ROLE}/${payload}`);
+}
+
 // Member API's
 export const createCommunityMembers = (payload: any) => {
   return postRequest(ENDPOINTS.CREATE_COMMUNITY_MEMBERS, payload);
